@@ -80,6 +80,7 @@ exports.register = async (req, res) => {
         
 
         // else save team
+      
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -88,30 +89,8 @@ exports.register = async (req, res) => {
     }
 }
 
-    exports.sendOtp = async ( req,res)=>{
-        try{
-            const {email}=req.body;
-            const user = await users.findOne({email})
-            if(!user){
-                res.status(500).json({
-                    message: "Something went wrong or your are not register yet"
-                });
-            }
-              const otp = sendmail(email);
-              await users.updateOne({ email: email},{ otp: otp })
-              res.send({ msg: "otp has been sent" })
-        }
-        catch(err){
-            console.log(err);
-            res.status(500).json({
-                message: "Something went wrong"
-            });
-        }
-    }
-
-
     exports.emailVerify = async (req,res)=>{
-        try{
+       // try{
             const {email,otp}=req.body;
             console.log(req.body)
             const findOtp = await users.findOne({email})
@@ -124,10 +103,10 @@ exports.register = async (req, res) => {
             else{
                 res.send({msg:"not verifined",Status:false}).status(400)
             }
-        }
-        catch(e){
-                res.status(400).send(e)
-        }
+        // }
+        // catch(e){
+        //         res.status(400).send(e)
+        // }
     }
 
 // put Team mongodb id in jwt
@@ -174,37 +153,88 @@ exports.login = async (req, res) => {
     }
 }
 
-exports.resetPassword = async (req, res) => {
+// exports.forgotPassword = async (req, res) => {
     
-    try {
-        const {email,otp,password } = req.body;
-        const user = await users.findOne({ email });
+//     try {
+//         const {email } = req.body;
+//         const team = await Team.findOne({ leader_email });
 
-        if (!user) {
-            return res.status(400).json({
-                message: "user email does not exist"
-            });
-        }
-        if(user.otp==otp){
-            bcrypt.hash(password, 12, async function (err, hash) {
-            await users.updateOne({email},{password:hash})
-            })
-            res.status(200).json({
-                message: "password changed successfully",
-    
-            });
-        }
-        else{
-            res.send(
-                {
-                    massege:'enter otp is not correct'
-                }
-            ).status(400)
-        }   
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            message: "Something went wrong"
-        });
-    }
-}
+//         if (!team) {
+//             return res.status(400).json({
+//                 message: "Leader email does not exist"
+//             });
+//         }
+
+//         const secret = process.env.JWT_SECRET + team.password + team.createdAt;
+//         const payload = {
+//             team_id: team._id,
+//         };
+
+//         try {
+//             var token = jwt.sign(payload, secret, { expiresIn: '15m' });
+//         } catch (error) {
+//             return res.status(500).json({
+//                 message: "Invalid token."
+//             });
+//         }
+        
+//         const link = `${process.env.HOSTNAME}/auth/password/reset/${team._id}/${token}`;
+//         // todo: send email 
+
+//         res.status(200).json({
+//             message: "Email sent successfully",
+//             link: link
+
+//         });
+
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json({
+//             message: "Something went wrong"
+//         });
+//     }
+// }
+
+// exports.resetPassword = async (req, res) => {
+//     try {
+//         const { team_id, token } = req.params;
+//         const { new_password } = req.body;
+
+//         try {
+//             var team = await Team.findById(team_id);
+//         } catch (error) {
+//             return res.status(500).json({
+//                 message: "Invalid link."
+//             });
+//         }
+
+//         if(!team) {
+//             return res.status(400).json({
+//                 message: "Invalid link."
+//             });
+//         }
+
+//         const secret = process.env.JWT_SECRET + team.password + team.createdAt;
+        
+//         try {
+//             var payload = jwt.verify(token, secret);
+//         } catch (error) {
+//             return res.status(500).json({
+//                 message: "Link expired."
+//             });
+//         }
+
+//         team.password = new_password;
+//         const result = await team.save();
+        
+//         res.status(200).json({
+//             message: "Password changed successfully"
+//         });
+        
+//     } catch (error) {
+//         console.log("Error in reseting password.", error);
+//         return res.status(500).json({
+//             message: "Something went wrong"
+//         });
+//     }
+// }

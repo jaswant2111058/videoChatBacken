@@ -19,6 +19,21 @@ const Schema = new mongoose.Schema({
     otp: {
         type: Number,
     },
+    tasks:[
+        {
+            id:
+            {
+              type: mongoose.Schema.Types.ObjectId,
+            },
+            taskName:String,
+            discription:String,
+            date:Array,
+            fromTime:String,
+            toTime:String,
+            completeStatus:Boolean
+        }
+    ]
+    
 },
 {
     timestamps: true

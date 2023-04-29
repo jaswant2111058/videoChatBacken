@@ -58,7 +58,7 @@ app.use('/', authRouter);
 
 
 
-httpServer.listen(process.env.PORT || '5000', () => {
-    console.log(`Server started at port ${process.env.PORT || '5000'}`);
+httpServer.listen(process.env.PORT || '8000', () => {
+    console.log(`Server started at port ${process.env.PORT || '8000'}`);
 });
 // module.exports = app;
